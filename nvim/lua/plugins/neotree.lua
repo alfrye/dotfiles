@@ -14,12 +14,11 @@ return {
   },
   lazy = false, -- neo-tree will lazily load itself
   ---@module "neo-tree"
-  ---@type neotree.Config?
   opts = {
     -- add options here
   },
   config = function()
-      
+
    vim.keymap.set('n', '<C-n>', ':Neotree filesystem reveal left<CR>')
   end
 }
