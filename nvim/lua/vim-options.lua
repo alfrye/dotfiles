@@ -8,3 +8,5 @@ vim.cmd("set cursorline")
 vim.cmd("set hlsearch")
 vim.g.mapleader = " "
 
+vim.keymap.set({'n', 'v'}, '<C-y>', '"+y<CR>')
+
