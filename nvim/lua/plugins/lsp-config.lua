@@ -25,6 +25,24 @@ return {
        vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
       vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
       vim.keymap.set({'n', 'v'}, '<leader>ca',  vim.lsp.buf.code_action,{})
+          vim.diagnostic.config({
+        virtual_text = {
+            -- Set to true to enable virtual text for diagnostics
+            -- Set to false to disable it
+            enabled = true,
+            -- Optional: Customize the prefix character for virtual text
+            prefix = '●', -- Example: '■', '▎', 'x'
+            -- Optional: Show the source of the diagnostic (e.g., language server name)
+            -- "always" or "if_many"
+            source = "always",
+        },
+        -- Optional: Sort diagnostics by severity for signs and virtual text
+        severity_sort = true,
+        -- Optional: Configure floating window behavior for diagnostics
+        float = {
+            source = "always",
+        },
+    })
     end
   }
 }
