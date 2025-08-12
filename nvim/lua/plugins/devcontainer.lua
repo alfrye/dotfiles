@@ -54,10 +54,10 @@ return {
       -- installed: "https://github.com/erichlf/dotfiles"
       -- This is an example for configuring other dotfiles inside the docker container
       dotfiles_repository = "https://github.com/alfrye/dotfiles.git",
-      dotfiles_branch = "main", -- branch to clone from dotfiles_repository`
+      dotfiles_branch = "feature/add-devcontainer-support", -- branch to clone from dotfiles_repository`
       dotfiles_targetPath = "~/dotfiles", -- location to install dotfiles
       -- script to run after dotfiles are cloned
-      --dotfiles_intallCommand = "install.sh",
+      dotfiles_intallCommand = "intall.sh",
       shell = "bash", -- shell to use when executing commands
       -- The particular binary to use for connecting to in the devcontainer
       -- Most likely this should remain nvim
