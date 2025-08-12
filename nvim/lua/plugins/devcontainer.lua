@@ -1,4 +1,4 @@
-return {
+eturn {
   "erichlf/devcontainer-cli.nvim",
   dependencies = { 'akinsho/toggleterm.nvim' },
   keys = {
@@ -57,7 +57,7 @@ return {
       dotfiles_branch = "feature/add-devcontainer-support", -- branch to clone from dotfiles_repository`
       dotfiles_targetPath = "~/dotfiles", -- location to install dotfiles
       -- script to run after dotfiles are cloned
-      dotfiles_intallCommand = "~/dotfiles/scripts/intall.sh",
+      dotfiles_installCommand = "~/dotfiles/scripts/intall.sh",
       shell = "bash", -- shell to use when executing commands
       -- The particular binary to use for connecting to in the devcontainer
       -- Most likely this should remain nvim
