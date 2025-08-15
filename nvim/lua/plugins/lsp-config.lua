@@ -9,19 +9,34 @@ return {
      "williamboman/mason-lspconfig.nvim",
      config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = {"lua_ls", "bashls"}
+        ensure_installed = {"lua_ls", "bashls", "gopls"}
       })
     end
   },
   {
     "neovim/nvim-lspconfig",
     config = function()
+      local lspconfig_util = require('lspconfig.util')
+lspconfig_util.on_setup = lspconfig_util.add_hook_after(lspconfig_util.on_setup, function(config, user_config)
+    config.on_new_config = lspconfig_util.add_hook_after(config.on_new_config, require('devcontainers').on_new_config)
+end)
        local capabilities = require('cmp_nvim_lsp').default_capabilities()
       local lspconfig = require("lspconfig")
       lspconfig.lua_ls.setup({
          capabilites = capabilities
       })
       lspconfig.bashls.setup({})
+      lspconfig.gopls.setup {
+        -- Optional: Add custom settings for gopls
+        settings = {
+            gopls = {
+                analyses = {
+                    unusedparams = true,
+                },
+                staticcheck = true,
+            },
+        },
+    }
        vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
       vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
       vim.keymap.set({'n', 'v'}, '<leader>ca',  vim.lsp.buf.code_action,{})
