@@ -59,7 +59,7 @@ return {
 				lostcancel = true,
 				httpresponse = true,
 				ifaceassert = true,
-				loopclosure = true,
+        loopclosure = true,
 				nilfunc = true,
 				nonewvars = true,
 				noresultvalues = true,

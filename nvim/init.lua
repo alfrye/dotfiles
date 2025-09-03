@@ -18,4 +18,15 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 require("vim-options")
-require("lazy").setup("plugins")
+--require("config.lsp")
+ require("lazy").setup({
+  spec = {
+     -- add LazyVim and import its plugins
+     -- import/override with your plugins
+     { import = "plugins" },
+   },
+ })
+
+
+--require('config.lsp')
+

@@ -1,2 +1,4 @@
 WARN  2025-08-13T06:07:06.858 291   log_path_init:95: Failed to create directory /home/vscode/.cache/nvim for writing logs: Unknown system error 1
 WARN  2025-08-13T06:43:34.985 143   log_path_init:95: Failed to create directory /home/vscode/.cache/nvim for writing logs: Unknown system error 1
+WARN  2025-08-15T05:35:30.313 160   log_path_init:95: Failed to create directory /home/vscode/.cache/nvim for writing logs: Unknown system error 1
+WARN  2025-08-16T00:29:40.746 68128 log_path_init:95: Failed to create directory /home/vscode/.cache/nvim for writing logs: Unknown system error 1
