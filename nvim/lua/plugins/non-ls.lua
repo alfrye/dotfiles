@@ -213,44 +213,188 @@
 --     vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
 --   end,
 -- }
+-- return {
+--   "nvimtools/none-ls.nvim",
+--   config = function()
+--     local null_ls = require("null-ls")
+--
+--     -- Helper: wrap a command so it always runs inside the devcontainer
+--     local function in_devcontainer(cmd, extra_args)
+--       return {
+--         command = "devcontainer",
+--         args = vim.list_extend({
+--           "exec",
+--           "--workspace-folder",
+--           vim.fn.getcwd(), -- or your devcontainer workspace path if fixed
+--           cmd,
+--         }, extra_args or {}),
+--       }
+--     end
+--
+--     null_ls.setup({
+--       sources = {
+--         -- Lua
+--         null_ls.builtins.formatting.stylua,
+--
+--         -- Shell
+--         null_ls.builtins.formatting.shfmt.with(in_devcontainer("shfmt")),
+--
+--         -- Go formatters
+--         null_ls.builtins.formatting.gofmt.with(in_devcontainer("gofmt")),
+--         null_ls.builtins.formatting.goimports.with(in_devcontainer("goimports")),
+--         null_ls.builtins.formatting.gofumpt.with(in_devcontainer("gofumpt")),
+--
+--         -- Go diagnostics
+--         null_ls.builtins.diagnostics.golangci_lint.with(in_devcontainer("golangci-lint")),
+--       },
+--     })
+--
+--     -- Keymap for formatting
+--     vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
+--   end,
+-- }
+
+
+-- return {
+--   "nvimtools/none-ls.nvim",
+--   config = function()
+--     local null_ls = require("null-ls")
+--
+--     -- Wrap a command so it runs inside the devcontainer
+--     local function in_devcontainer(cmd, extra_args)
+--       return {
+--         command = "devcontainer",
+--         args = vim.list_extend({
+--           "exec",
+--           "--workspace-folder",
+--           vim.fn.getcwd(),
+--           cmd,
+--         }, extra_args or {}),
+--       }
+--     end
+--
+--     null_ls.setup({
+--       sources = {
+--         -- Lua (host tool, fine)
+--         null_ls.builtins.formatting.stylua,
+--
+--         -- Shell
+--         null_ls.builtins.formatting.shfmt.with({
+--           command = in_devcontainer("shfmt").command,
+--           args = in_devcontainer("shfmt").args,
+--         }),
+--
+--         -- Go formatters
+--         null_ls.builtins.formatting.gofmt.with({
+--           command = in_devcontainer("gofmt").command,
+--           args = in_devcontainer("gofmt").args,
+--         }),
+--         null_ls.builtins.formatting.goimports.with({
+--           command = in_devcontainer("goimports").command,
+--           args = in_devcontainer("goimports").args,
+--         }),
+--         null_ls.builtins.formatting.gofumpt.with({
+--           command = in_devcontainer("gofumpt").command,
+--           args = in_devcontainer("gofumpt").args,
+--         }),
+--
+--         -- Go diagnostics
+--         null_ls.builtins.diagnostics.golangci_lint.with({
+--           command = in_devcontainer("golangci-lint").command,
+--           args = in_devcontainer("golangci-lint").args,
+--         }),
+--       },
+--     })
+--
+--     -- Formatting shortcut
+--     vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
+--   end,
+-- }
+--
+-- return {
+--   "nvimtools/none-ls.nvim",
+--   config = function()
+--     local null_ls = require("null-ls")
+--
+--     -- Wrap a command so it runs inside the devcontainer, with debug logging
+--     local function in_devcontainer(cmd, extra_args)
+--       local args = vim.list_extend({
+--         "exec",
+--         "--workspace-folder",
+--         vim.fn.getcwd(),
+--         cmd,
+--       }, extra_args or {})
+--
+--       local config = {
+--         command = "devcontainer",
+--         args = args,
+--       }
+--
+--       -- Debug: print the full command null-ls will try
+--       vim.notify("[null-ls debug] command: " .. config.command .. " " .. table.concat(config.args, " "), vim.log.levels.INFO)
+--
+--       return config
+--     end
+--
+--     null_ls.setup({
+--       sources = {
+--         -- Lua (runs locally)
+--         null_ls.builtins.formatting.stylua,
+--
+--         -- Shell
+--         null_ls.builtins.formatting.shfmt.with(in_devcontainer("shfmt")),
+--
+--         -- Go formatters
+--         null_ls.builtins.formatting.gofmt.with(in_devcontainer("gofmt")),
+--         null_ls.builtins.formatting.goimports.with(in_devcontainer("goimports")),
+--         null_ls.builtins.formatting.gofumpt.with(in_devcontainer("gofumpt")),
+--
+--         -- Go diagnostics
+--         null_ls.builtins.diagnostics.golangci_lint.with(in_devcontainer("golangci-lint")),
+--       },
+--     })
+--
+--     -- Shortcut for formatting
+--     vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
+--   end,
+-- }
+--
+--
 return {
   "nvimtools/none-ls.nvim",
+  dependencies = { "jedrzejboczar/devcontainers.nvim" },
   config = function()
     local null_ls = require("null-ls")
 
-    -- Helper: wrap a command so it always runs inside the devcontainer
     local function in_devcontainer(cmd, extra_args)
-      return {
-        command = "devcontainer",
-        args = vim.list_extend({
-          "exec",
-          "--workspace-folder",
-          vim.fn.getcwd(), -- or your devcontainer workspace path if fixed
-          cmd,
-        }, extra_args or {}),
-      }
+      local args = vim.list_extend({
+        "exec",
+        "--workspace-folder",
+        vim.fn.getcwd(),
+        cmd,
+      }, extra_args or {})
+
+      return { command = "devcontainer", args = args }
     end
 
-    null_ls.setup({
-      sources = {
-        -- Lua
-        null_ls.builtins.formatting.stylua,
+    local function setup_null_ls()
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.stylua,
+          null_ls.builtins.formatting.shfmt.with(in_devcontainer("shfmt")),
+          null_ls.builtins.formatting.gofmt.with(in_devcontainer("gofmt")),
+          null_ls.builtins.formatting.goimports.with(in_devcontainer("goimports")),
+          null_ls.builtins.formatting.gofumpt.with(in_devcontainer("gofumpt")),
+          null_ls.builtins.diagnostics.golangci_lint.with(in_devcontainer("golangci-lint")),
+        },
+      })
+    end
 
-        -- Shell
-        null_ls.builtins.formatting.shfmt.with(in_devcontainer("shfmt")),
-
-        -- Go formatters
-        null_ls.builtins.formatting.gofmt.with(in_devcontainer("gofmt")),
-        null_ls.builtins.formatting.goimports.with(in_devcontainer("goimports")),
-        null_ls.builtins.formatting.gofumpt.with(in_devcontainer("gofumpt")),
-
-        -- Go diagnostics
-        null_ls.builtins.diagnostics.golangci_lint.with(in_devcontainer("golangci-lint")),
-      },
+    -- Wait until devcontainer is started
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "DevcontainersStarted",
+      callback = setup_null_ls,
     })
-
-    -- Keymap for formatting
-    vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
   end,
 }
 

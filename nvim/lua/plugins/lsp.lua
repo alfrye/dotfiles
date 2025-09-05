@@ -418,39 +418,342 @@
 -- }
 --
 -- ** Added in fall back logic for projects that don't use devcontainers and need to use lsp locally
+-- return {
+--   "neovim/nvim-lspconfig",
+--   config = function()
+--     local devcontainers = require("devcontainers")
+--     local util = require("lspconfig.util")
+--
+--     -- Decide whether to run gopls inside container or locally
+--     local function gopls_cmd()
+--       -- Look up from current buffer’s directory
+--       local cwd = vim.fn.getcwd()
+--       local root = util.root_pattern(".devcontainer", "devcontainer.json", ".git")(cwd)
+--
+--       if root and vim.fn.filereadable(root .. "/.devcontainer/devcontainer.json") == 1 then
+--         -- Inside devcontainer project
+--         return devcontainers.lsp_cmd({ "gopls" })
+--       else
+--         -- No devcontainer → fallback to system gopls
+--         return { "gopls" }
+--       end
+--     end
+--
+--     -- Register config
+--     vim.lsp.config("gopls", {
+--       cmd = gopls_cmd(),
+--       root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+--       on_attach = devcontainers.lsp_on_attach,
+--     })
+--
+--     -- Enable auto-start
+--     vim.lsp.enable("gopls")
+--            vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
+--       vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
+--       vim.keymap.set({'n', 'v'}, '<leader>ca',  vim.lsp.buf.code_action,{})
+--           vim.diagnostic.config({
+--         virtual_text = {
+--             -- Set to true to enable virtual text for diagnostics
+--             -- Set to false to disable it
+--             enabled = true,
+--             -- Optional: Customize the prefix character for virtual text
+--             prefix = '●', -- Example: '■', '▎', 'x'
+--             -- Optional: Show the source of the diagnostic (e.g., language server name)
+--             -- "always" or "if_many"
+--             source = "always",
+--         },
+--         -- Optional: Sort diagnostics by severity for signs and virtual text
+--         severity_sort = true,
+--         -- Optional: Configure floating window behavior for diagnostics
+--         float = {
+--             source = "always",
+--         },
+--     })
+--
+--   end,
+-- }
+--
+-- lua/plugins/lsp.lua
+-- return {
+--   "neovim/nvim-lspconfig",
+--   dependencies = {
+--     "williamboman/mason.nvim",
+--     "williamboman/mason-lspconfig.nvim",
+--     "hrsh7th/cmp-nvim-lsp",
+--     "jedrzejboczar/devcontainers.nvim",
+--   },
+--   config = function()
+--     local lspconfig = require("lspconfig")
+--     local mason = require("mason")
+--     local mason_lspconfig = require("mason-lspconfig")
+--     local cmp_lsp = require("cmp_nvim_lsp")
+--
+--     -- capabilities for autocompletion
+--     local capabilities = cmp_lsp.default_capabilities()
+--
+--     mason.setup()
+--     mason_lspconfig.setup({
+--       ensure_installed = { "bashls" }, -- example local server
+--     })
+--
+--     -- explicitly set up local servers managed by Mason
+--     for _, server_name in ipairs({ "bashls" }) do
+--       lspconfig[server_name].setup({
+--         capabilities = capabilities,
+--       })
+--     end
+--
+--     -- gopls inside devcontainer
+--     local devcontainers = require("devcontainers")
+--     devcontainers.lspconfig("gopls", {
+--       capabilities = capabilities,
+--     })
+--
+--     -- reload LSP clients after container starts
+--     vim.api.nvim_create_autocmd("User", {
+--       pattern = "DevcontainerStarted",
+--       callback = function()
+--         for _, client in ipairs(vim.lsp.get_active_clients()) do
+--           client.stop(true)
+--         end
+--         vim.cmd("edit") -- reopen buffer to trigger LSP reattach
+--         vim.notify("LSP clients restarted after devcontainer start", vim.log.levels.INFO)
+--       end,
+--     })
+--   end,
+-- }
+--
+-- return {
+--   "neovim/nvim-lspconfig",
+--   dependencies = {
+--     "williamboman/mason.nvim",
+--     "williamboman/mason-lspconfig.nvim",
+--     "hrsh7th/cmp-nvim-lsp",
+--     "jedrzejboczar/devcontainers.nvim",
+--   },
+--   config = function()
+--     local lspconfig = require("lspconfig")
+--     local mason = require("mason")
+--     local mason_lspconfig = require("mason-lspconfig")
+--     local cmp_lsp = require("cmp_nvim_lsp")
+--
+--     -- capabilities for autocompletion
+--     local capabilities = cmp_lsp.default_capabilities()
+--
+--     mason.setup()
+--     mason_lspconfig.setup({
+--       ensure_installed = { "bashls" }, -- local server
+--     })
+--
+--     -- explicitly set up local servers via mason
+--     for _, server_name in ipairs({ "bashls" }) do
+--       lspconfig[server_name].setup({
+--         capabilities = capabilities,
+--       })
+--     end
+--
+--     -- gopls via devcontainers.nvim
+--     require("devcontainers.lsp").setup("gopls", {
+--       capabilities = capabilities,
+--     })
+--
+--     -- reload LSP clients after container starts
+--     vim.api.nvim_create_autocmd("User", {
+--       pattern = "DevcontainerStarted",
+--       callback = function()
+--         for _, client in ipairs(vim.lsp.get_active_clients()) do
+--           client.stop(true)
+--         end
+--         vim.cmd("edit") -- reopen buffer to trigger LSP reattach
+--         vim.notify("LSP clients restarted after devcontainer start", vim.log.levels.INFO)
+--       end,
+--     })
+--   end,
+-- }
+--
+-- return {
+--   "neovim/nvim-lspconfig",
+--   dependencies = {
+--     "williamboman/mason.nvim",
+--     "williamboman/mason-lspconfig.nvim",
+--     "hrsh7th/cmp-nvim-lsp",
+--     "jedrzejboczar/devcontainers.nvim",
+--   },
+--   config = function()
+--     local lspconfig = require("lspconfig")
+--     local mason = require("mason")
+--     local mason_lspconfig = require("mason-lspconfig")
+--     local cmp_lsp = require("cmp_nvim_lsp")
+--
+--     local capabilities = cmp_lsp.default_capabilities()
+--
+--     mason.setup()
+--     mason_lspconfig.setup({
+--       ensure_installed = { "bashls" },
+--     })
+--
+--     -- Local servers via Mason
+--     lspconfig.bashls.setup({
+--       capabilities = capabilities,
+--     })
+--
+--     -- gopls will be wrapped by devcontainers.nvim automatically
+--     lspconfig.gopls.setup({
+--       capabilities = capabilities,
+--     })
+--
+--     -- Reload LSP clients after devcontainer starts
+--     vim.api.nvim_create_autocmd("User", {
+--       pattern = "DevcontainerStarted",
+--       callback = function()
+--         for _, client in ipairs(vim.lsp.get_active_clients()) do
+--           client.stop(true)
+--         end
+--         vim.cmd("edit") -- reopen buffer to trigger LSP reattach
+--         vim.notify("LSP clients restarted after devcontainer start", vim.log.levels.INFO)
+--       end,
+--     })
+--   end,
+-- }
+--
+-- return {
+--   "neovim/nvim-lspconfig",
+--   dependencies = {
+--     "williamboman/mason.nvim",
+--     "williamboman/mason-lspconfig.nvim",
+--     "hrsh7th/cmp-nvim-lsp",
+--     "jedrzejboczar/devcontainers.nvim",
+--   },
+--   config = function()
+--     local lspconfig = require("lspconfig")
+--     local mason = require("mason")
+--     local mason_lspconfig = require("mason-lspconfig")
+--     local cmp_lsp = require("cmp_nvim_lsp")
+--
+--     local capabilities = cmp_lsp.default_capabilities()
+--
+--     local on_attach = function(client, bufnr)
+--       local bufmap = function(mode, lhs, rhs)
+--         vim.keymap.set(mode, lhs, rhs, { buffer = bufnr })
+--       end
+--
+--       bufmap("n", "gd", vim.lsp.buf.definition)
+--       bufmap("n", "K", vim.lsp.buf.hover)
+--       bufmap("n", "gr", vim.lsp.buf.references)
+--       bufmap("n", "<leader>rn", vim.lsp.buf.rename)
+--     end
+--
+--     mason.setup()
+--     mason_lspconfig.setup({
+--       ensure_installed = { "bashls", "lua_ls" },
+--     })
+--
+--     -- Local servers
+--     lspconfig.bashls.setup({
+--       capabilities = capabilities,
+--       on_attach = on_attach,
+--     })
+--
+--     lspconfig.lua_ls.setup({
+--       capabilities = capabilities,
+--       on_attach = on_attach,
+--     })
+--
+--     -- gopls (inside devcontainer)
+--     -- lspconfig.gopls.setup({
+--     --   capabilities = capabilities,
+--     --   on_attach = on_attach,
+--     -- })
+-- lspconfig.gopls.setup({
+--   cmd = { "devcontainer", "exec", "--workspace-folder", vim.loop.cwd(), "gopls" },
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   filetypes = { "go", "gomod", "gowork", "gotmpl" },
+--   root_dir = lspconfig.util.root_pattern("go.work", "go.mod", ".git"),
+-- })
+--
+--     -- Reload after devcontainer starts
+--     vim.api.nvim_create_autocmd("User", {
+--       pattern = "DevcontainerStarted",
+--       callback = function()
+--         for _, client in ipairs(vim.lsp.get_active_clients()) do
+--           client.stop(true)
+--         end
+--         vim.cmd("edit") -- reopen buffer to trigger attach
+--         vim.notify("LSP clients restarted after devcontainer start", vim.log.levels.INFO)
+--       end,
+--     })
+--   end,
+-- }
+--
+--
+-- ~/.config/nvim/lua/plugins/lsp.lua
+
 return {
   "neovim/nvim-lspconfig",
+  dependencies = {
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
+  },
   config = function()
-    local devcontainers = require("devcontainers")
-    local util = require("lspconfig.util")
+    local lspconfig = require("lspconfig")
 
-    -- Decide whether to run gopls inside container or locally
-    local function gopls_cmd()
-      -- Look up from current buffer’s directory
-      local cwd = vim.fn.getcwd()
-      local root = util.root_pattern(".devcontainer", "devcontainer.json", ".git")(cwd)
-
-      if root and vim.fn.filereadable(root .. "/.devcontainer/devcontainer.json") == 1 then
-        -- Inside devcontainer project
-        return devcontainers.lsp_cmd({ "gopls" })
-      else
-        -- No devcontainer → fallback to system gopls
-        return { "gopls" }
-      end
+    -- Capabilities (extend for nvim-cmp if installed)
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    local ok_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+    if ok_cmp then
+      capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
     end
 
-    -- Register config
-    vim.lsp.config("gopls", {
-      cmd = gopls_cmd(),
-      root_dir = util.root_pattern("go.work", "go.mod", ".git"),
-      on_attach = devcontainers.lsp_on_attach,
-    })
+    -- on_attach (keymaps etc.)
+    local on_attach = function(client, bufnr)
+      local bufmap = function(mode, lhs, rhs, desc)
+        vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+      end
 
-    -- Enable auto-start
-    vim.lsp.enable("gopls")
-           vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
-      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
-      vim.keymap.set({'n', 'v'}, '<leader>ca',  vim.lsp.buf.code_action,{})
+      bufmap("n", "gd", vim.lsp.buf.definition, "Goto Definition")
+      bufmap("n", "K", vim.lsp.buf.hover, "Hover Documentation")
+      bufmap("n", "gi", vim.lsp.buf.implementation, "Goto Implementation")
+      bufmap("n", "<leader>rn", vim.lsp.buf.rename, "Rename Symbol")
+      bufmap("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
+      bufmap("n", "gr", vim.lsp.buf.references, "Goto References")
+      bufmap("n", "<leader>f", function()
+        vim.lsp.buf.format({ async = true })
+      end, "Format Buffer")
+    end
+
+    -- Host → container path translation
+    local function container_workspace(host_path)
+      return host_path:gsub("^/home/alanfrye/code", "/workspaces")
+    end
+
+    -------------------------------------------------------------------------
+    -- gopls (runs inside devcontainer)
+    -------------------------------------------------------------------------
+    lspconfig.gopls.setup({
+      cmd = {
+        "devcontainer",
+        "exec",
+        "--workspace-folder",
+        vim.loop.cwd(),
+        "gopls",
+      },
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { "go", "gomod", "gowork", "gotmpl" },
+      root_dir = lspconfig.util.root_pattern("go.work", "go.mod", ".git"),
+
+      before_init = function(params)
+        if params and params.rootUri then
+          local host_path = vim.uri_to_fname(params.rootUri)
+          local container_path = container_workspace(host_path)
+          params.rootUri = vim.uri_from_fname(container_path)
+          params.workspaceFolders = {
+            { uri = params.rootUri, name = "workspace" },
+          }
+        end
+      end,
+
           vim.diagnostic.config({
         virtual_text = {
             -- Set to true to enable virtual text for diagnostics
@@ -468,8 +771,34 @@ return {
         float = {
             source = "always",
         },
+    }),
+      vim.lsp.buf.code_action({
+    only = {"quickfix"},
+})
     })
 
+    -------------------------------------------------------------------------
+    -- Other language servers (run locally, not in container)
+    -------------------------------------------------------------------------
+
+    -- Lua
+    lspconfig.lua_ls.setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = {
+        Lua = {
+          diagnostics = { globals = { "vim" } },
+        },
+      },
+    })
+
+    -- Bash
+    lspconfig.bashls.setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+    })
+
+    -- (Add other servers here as you need them)
   end,
 }
 
