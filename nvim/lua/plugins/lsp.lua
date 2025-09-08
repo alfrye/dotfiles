@@ -1,4 +1,4 @@
--- ~/.config/nvim/lua/plugins/lsp.lua
+
 --
 -- return {
 --   {
@@ -765,11 +765,14 @@ return {
             -- "always" or "if_many"
             source = "always",
         },
+        underline = true,
+        virtual_lines = true,
         -- Optional: Sort diagnostics by severity for signs and virtual text
         severity_sort = true,
         -- Optional: Configure floating window behavior for diagnostics
         float = {
             source = "always",
+            border = "rounded",
         },
     }),
       vim.lsp.buf.code_action({
