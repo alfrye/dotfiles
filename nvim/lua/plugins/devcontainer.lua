@@ -1,38 +1,6 @@
 return
-{
-  "arnaupv/nvim-devcontainer-cli",
-  opts = {
-    -- By default, if no extra config is added, following nvim_dotfiles are
-    -- installed: "https://github.com/LazyVim/starter"
-    -- This is an example for configuring other nvim_dotfiles inside the docker container
-    devcontainer_folder=".devcontainer/",
-    nvim_dotfiles_repo = "https://github.com/alfrye/dotfiles",
-    nvim_dotfiles_branch="feature/devcontainer-cli.nvim",
-    nvim_dotfiles_directory="~/nvim_dotfiles",
-    nvim_dotfiles_install_command = "cd ~/nvim_dotfiles/ && ./install.sh",
-    -- In case you want to change the way the devenvironment is setup, you can also provide your own setup
-     -- setup_environment_repo = "",
-     -- setup_environment_install_command = "",
-  },
-  keys = {
-    -- stylua: ignore
-    {
-      "<leader>cdu",
-      ":DevcontainerUp<cr>",
-      desc = "Up the DevContainer",
-    },
-    {
-      "<leader>cdc",
-      ":DevcontainerConnect<cr>",
-      desc = "Connect to DevContainer",
-    },
-  }
-}
---return {
---   {
-  --   -- Terminal management
-  --   "akinsho/toggleterm.nvim",
-  --   version = "*",
+  {
+--   { -- Terminal management "akinsho/toggleterm.nvim", version = "*",
   --   cmd = { "ToggleTerm", "TermExec" },
   --   config = function()
   --     local ok, toggleterm = pcall(require, "toggleterm")
@@ -62,27 +30,27 @@ return
   --     })
   --   end,
   -- },
--- {
---   "erichlf/devcontainer-cli.nvim",
---   dependencies = { "akinsho/toggleterm.nvim" },
---   init = function()
---     require("devcontainer-cli").setup({
---       -- only the most useful options shown; see full config below
---       interactive = false,
---       toplevel = true,
---       remove_existing_container = true,
---       dotfiles_repository = "https://github.com/alfrye/dotfiles",
---       dotfiles_branch = "feature/devcontainer-cli.nvim",
---       dotfiles_targetPath = "~/dotfiles",
---       dotfiles_installCommand = "install.sh",
---       shell = "bash",
---       nvim_binary = "nvim",
---       log_level = "debug",
---       console_level = "info",
---         terminal = {
---           direction = "float"
---         },
---     })
---   end,
--- }
---}
+{
+  "erichlf/devcontainer-cli.nvim",
+  dependencies = { "akinsho/toggleterm.nvim" },
+  init = function()
+    require("devcontainer-cli").setup({
+      -- only the most useful options shown; see full config below
+      interactive = false,
+      toplevel = true,
+      remove_existing_container = true,
+      dotfiles_repository = "https://github.com/alfrye/dotfiles",
+      dotfiles_branch = "feature/devcontainer-cli.nvim",
+      dotfiles_targetPath = "~/dotfiles",
+      dotfiles_installCommand = "install.sh",
+      shell = "bash",
+      nvim_binary = "nvim",
+      log_level = "debug",
+      console_level = "info",
+        terminal = {
+          direction = "float"
+        },
+    })
+  end,
+}
+}
