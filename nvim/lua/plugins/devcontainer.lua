@@ -76,7 +76,7 @@ return {
 				toplevel = true,
 				remove_existing_container = true,
 				dotfiles_repository = "https://github.com/alfrye/dotfiles",
-				dotfiles_branch = "feature/devcontainer-cli.nvim",
+				dotfiles_branch = "main",
 				dotfiles_targetPath = "~/dotfiles",
 				dotfiles_installCommand = "install.sh",
 				shell = "bash",
