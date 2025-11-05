@@ -22,8 +22,8 @@ return {
 	      shell = vim.o.shell,
 	      float_opts = {
 	        border = "rounded",
-	        width = math.floor(vim.o.columns * 0.9),
-	        height = math.floor(vim.o.lines * 0.8),
+	        -- width = math.floor(vim.o.columns * 0.9),
+	        -- height = math.floor(vim.o.lines * 0.8),
 	        winblend = 5,
 	      },
 	    })
